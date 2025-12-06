@@ -17,8 +17,14 @@ Including another URLconf
 # StockHub/urls.py
 from django.contrib import admin
 from django.urls import path, include
+from rest_framework.authtoken.views import obtain_auth_token
+from accounts.views import LogoutView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', include('accounts.urls')),   # include your app's urls at root
+    path('api/', include('accounts.urls')),     # users endpoints (from earlier)
+    path('', include('accounts.urls')),
+    path('api/auth/login/', obtain_auth_token, name='api_token_auth'),  # POST username+password -> token
+    path('api/auth/logout/', LogoutView.as_view(), name='api_token_logout'),
+    # include inventory urls later
 ]
