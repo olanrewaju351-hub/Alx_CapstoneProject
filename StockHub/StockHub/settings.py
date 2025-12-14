@@ -33,7 +33,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', 'django-insecure-REPLACE_ME_FOR_PRODUCTION')
 
 # Development convenience: set to False in prod.
-DEBUG = True
+DEBUG = False
 
 # Local hosts for dev. Replace or restrict in production.
 ALLOWED_HOSTS = ['127.0.0.1', 'localhost', '[::1]']
@@ -44,9 +44,10 @@ INSTALLED_APPS = [
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
-    'rest_framework.authtoken',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'rest_framework',
+    'rest_framework.authtoken',
 
     # your apps
     'accounts',
@@ -63,6 +64,9 @@ REST_FRAMEWORK = {
     ],
     'DEFAULT_PERMISSION_CLASSES': [
         'rest_framework.permissions.IsAuthenticatedOrReadOnly',
+    ],
+     'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.IsAuthenticated',
     ],
 }
 

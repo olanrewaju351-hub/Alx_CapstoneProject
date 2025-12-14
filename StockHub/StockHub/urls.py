@@ -18,13 +18,14 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from rest_framework.authtoken.views import obtain_auth_token
-from accounts.views import LogoutView
+from django.contrib.auth.views import LogoutView
+
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/', include('accounts.urls')),     # users endpoints (from earlier)
     path('', include('accounts.urls')),
     path('api/auth/login/', obtain_auth_token, name='api_token_auth'),  # POST username+password -> token
-    path('api/auth/logout/', LogoutView.as_view(), name='api_token_logout'),
+    path('logout/', LogoutView.as_view(), name='logout'),
     # include inventory urls later
 ]

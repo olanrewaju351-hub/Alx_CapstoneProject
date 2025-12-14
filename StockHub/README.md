@@ -171,58 +171,208 @@ Render, Railway, or DigitalOcean
 
 ---
 
-## API Endpoints (Examples)
+# StockHub API Documentation
 
-* **User Registration:**
-  `POST /api/auth/register/`
+## Overview
 
-  ```json
-  {
-    "username": "kazeem",
-    "password": "securepassword",
-    "company": "StockHub Ltd",
-    "role": "Admin",
-    "year": 2025
-  }
-  ```
+StockHub is an Inventory Management REST API built with Django and Django REST Framework (DRF). This documentation covers authentication and user management functionalities, including user registration, login, token-based authentication, and profile access.
 
-* **User Login:**
-  `POST /api/auth/login/`
+Base URL (Development):
 
-  ```json
-  {
-    "username": "kazeem",
-    "password": "securepassword"
-  }
-  ```
+```
+http://127.0.0.1:8000/
+```
 
-* **User List (Authenticated):**
-  `GET /api/users/`
+All API responses are in JSON format.
 
 ---
 
-## Challenges Faced
+## Authentication
 
-* Initial server errors were resolved through debugging and AI guidance.
-* Learning Git staging and commits posed some difficulties, which were overcome with practice.
+StockHub uses **Django REST Framework Token Authentication**.
 
----
+* A token is generated when a user registers or logs in successfully.
+* The token must be included in the `Authorization` header for protected endpoints.
 
-## Next Steps
+### Authorization Header Format
 
-* Implement Inventory App
-* Implement Purchase App
-* Implement Sales App
-* Expand API endpoints for inventory, purchases, and sales
-
----
-
-## License
-
-This project is for educational purposes and can be freely used and modified.
+```
+Authorization: Token <your_token_here>
+```
 
 ---
 
-## Contact
+## User Roles
 
-* GitHub: https://github.com/olanrewaju351-hub
+Users can have one of the following roles:
+
+* **Admin** – Full access to system data and management features.
+* **Staff** – Limited access based on permissions.
+
+Role-based permissions can be extended as the application grows.
+
+---
+
+## API Endpoints
+
+### 1. User Registration
+
+**Endpoint:**
+
+```
+POST /api/accounts/register/
+```
+
+**Description:**
+Registers a new user and returns an authentication token.
+
+**Request Body:**
+
+```json
+{
+  "username": "john_doe",
+  "password": "StrongPassword123",
+  "company": "StockHub Ltd",
+  "year": 2025,
+  "role": "staff"
+}
+```
+
+**Success Response (201 Created):**
+
+```json
+{
+  "message": "User registered successfully",
+  "token": "abc123xyz..."
+}
+```
+
+**Error Response (400 Bad Request):**
+
+```json
+{
+  "username": ["This field is required."]
+}
+```
+
+---
+
+### 2. User Login
+
+**Endpoint:**
+
+```
+POST /api/accounts/login/
+```
+
+**Description:**
+Authenticates a user and returns an authentication token.
+
+**Request Body:**
+
+```json
+{
+  "username": "john_doe",
+  "password": "StrongPassword123"
+}
+```
+
+**Success Response (200 OK):**
+
+```json
+{
+  "message": "Login successful",
+  "token": "abc123xyz..."
+}
+```
+
+**Error Response (400 Bad Request):**
+
+```json
+{
+  "non_field_errors": ["Invalid username or password"]
+}
+```
+
+---
+
+### 3. User Profile (Protected)
+
+**Endpoint:**
+
+```
+GET /api/accounts/profile/
+```
+
+**Description:**
+Retrieves the profile of the currently authenticated user.
+
+**Headers Required:**
+
+```
+Authorization: Token <your_token_here>
+```
+
+**Success Response (200 OK):**
+
+```json
+{
+  "username": "john_doe",
+  "company": "StockHub Ltd",
+  "year": 2025,
+  "role": "staff"
+}
+```
+
+**Error Response (401 Unauthorized):**
+
+```json
+{
+  "detail": "Authentication credentials were not provided."
+}
+```
+
+---
+
+## Authentication Flow Summary
+
+1. User registers via `/register/` → receives token.
+2. User logs in via `/login/` → receives token.
+3. Token is included in headers for protected requests.
+4. Protected endpoints validate token before granting access.
+
+---
+
+## HTTP Status Codes Used
+
+| Status Code | Meaning                                 |
+| ----------- | --------------------------------------- |
+| 200         | OK – Request successful                 |
+| 201         | Created – Resource successfully created |
+| 400         | Bad Request – Validation or input error |
+| 401         | Unauthorized – Missing or invalid token |
+| 403         | Forbidden – Insufficient permissions    |
+
+---
+
+## Security Notes
+
+* Passwords are securely hashed using Django’s authentication system.
+* Tokens should be kept secret and transmitted only over HTTPS in production.
+* Token authentication is suitable for mobile apps and frontend frameworks.
+
+---
+
+## Future Enhancements
+
+* Inventory, Purchase, and Sales CRUD APIs
+* Role-based permissions (Admin vs Staff)
+* JWT authentication option
+* API versioning
+* Swagger/OpenAPI documentation
+
+---
+
+## Conclusion
+
+This documentation provides a clear guide for integrating and testing StockHub’s authentication and user management APIs. It serves as a foundation for extending the system with inventory and transactional features.

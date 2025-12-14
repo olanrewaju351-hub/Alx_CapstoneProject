@@ -1,37 +1,64 @@
-# accounts/views.py
-from django.shortcuts import render
-from django.http import HttpResponse
-
-# DRF imports (used for LogoutView)
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status, permissions
+from django.http import HttpResponse
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.authtoken.models import Token
+from .serializers import (
+    RegisterSerializer,
+    LoginSerializer,
+    ProfileSerializer
+)
 
 
 def home(request):
-    """
-    Renders the app home page.
-    Template path expected: accounts/templates/accounts/home.html
-    """
-    return render(request, 'accounts/home.html')
-    # If you want a quick text-only response instead of a template, use:
-    # return HttpResponse("Hello — StockHub home page is working")
+    return HttpResponse("Accounts API is running")
+
+# 🔐 REGISTER
+class RegisterView(APIView):
+    permission_classes = [permissions.AllowAny]
+
+    def post(self, request):
+        serializer = RegisterSerializer(data=request.data)
+        if serializer.is_valid():
+            user = serializer.save()
+            token = Token.objects.get(user=user)
+            return Response({
+                "message": "User registered successfully",
+                "token": token.key
+            }, status=status.HTTP_201_CREATED)
+
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-class LogoutView(APIView):
-    """
-    Simple token-based logout view.
-    Requires rest_framework.authtoken and the user to be authenticated.
-    POST to this endpoint will delete the user's token (forcing re-login).
-    """
+# 🔐 LOGIN
+class LoginView(APIView):
+    permission_classes = [permissions.AllowAny]
+
+    def post(self, request):
+        serializer = LoginSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+
+        user = serializer.validated_data
+        token, _ = Token.objects.get_or_create(user=user)
+
+        return Response({
+            "message": "Login successful",
+            "token": token.key
+        })
+
+
+# 👤 PROFILE (Authenticated)
+class ProfileView(APIView):
     permission_classes = [permissions.IsAuthenticated]
 
-    def post(self, request, format=None):
-        try:
-            token = Token.objects.get(user=request.user)
-            token.delete()
-        except Token.DoesNotExist:
-            # If token doesn't exist, that's fine — just return success
-            pass
-        return Response({"detail": "Logged out."}, status=status.HTTP_200_OK)
+    def get(self, request):
+        serializer = ProfileSerializer(request.user)
+        return Response(serializer.data)
+
+class LogoutView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request):
+        request.auth.delete()  # delete token
+        return Response({"message": "Logged out successfully"})
