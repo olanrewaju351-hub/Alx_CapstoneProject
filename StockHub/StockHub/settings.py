@@ -51,6 +51,7 @@ INSTALLED_APPS = [
 
     # your apps
     'accounts',
+    'inventory',
 ]
 
 # If you created a custom user model

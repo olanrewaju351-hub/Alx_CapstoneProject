@@ -16,3 +16,11 @@ class User(AbstractUser):
 
     def __str__(self):
         return self.username
+
+class Stock(models.Model):
+    item_code = models.CharField(max_length=50, unique=True)
+    stock_balance = models.PositiveIntegerField()
+    remarks = models.TextField(blank=True)
+
+    def __str__(self):
+        return self.item_code

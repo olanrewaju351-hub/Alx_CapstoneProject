@@ -1,6 +1,7 @@
 # accounts/serializers.py
 from rest_framework import serializers
 from .models import User
+from .models import Stock
 from django.contrib.auth.hashers import make_password
 from rest_framework.authtoken.models import Token
 from django.contrib.auth import get_user_model
@@ -67,3 +68,8 @@ class ProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ['username', 'company', 'year', 'role']
+
+class StockSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Stock
+        fields = ['id', 'item_code', 'stock_balance', 'remarks']

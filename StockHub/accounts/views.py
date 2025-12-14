@@ -1,5 +1,8 @@
+from rest_framework import generics
 from rest_framework.views import APIView
 from rest_framework.response import Response
+from .models import Stock
+from .serializers import StockSerializer
 from rest_framework import status, permissions
 from django.http import HttpResponse
 from rest_framework.permissions import IsAuthenticated
@@ -62,3 +65,14 @@ class LogoutView(APIView):
     def post(self, request):
         request.auth.delete()  # delete token
         return Response({"message": "Logged out successfully"})
+    
+# List all stock items or create a new one
+class StockListCreateView(generics.ListCreateAPIView):
+    queryset = Stock.objects.all()
+    serializer_class = StockSerializer
+
+# Retrieve, update, or delete a specific stock item
+class StockRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Stock.objects.all()
+    serializer_class = StockSerializer
+    lookup_field = 'id'

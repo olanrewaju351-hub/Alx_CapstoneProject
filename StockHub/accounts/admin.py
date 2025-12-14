@@ -2,6 +2,7 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 from .models import User
+from .models import Stock
 
 @admin.register(User)
 class UserAdmin(BaseUserAdmin):
@@ -22,3 +23,7 @@ class UserAdmin(BaseUserAdmin):
     )
     search_fields = ('username', 'email', 'company')
     ordering = ('id',)
+
+@admin.register(Stock)
+class StockAdmin(admin.ModelAdmin):
+    list_display = ('item_code', 'stock_balance', 'remarks')
