@@ -169,7 +169,7 @@ Render, Railway, or DigitalOcean
 6. **Access API:**
    Open your browser or Postman at: `http://127.0.0.1:8000/api/`
 
----
+
 
 # StockHub API Documentation
 
@@ -179,13 +179,12 @@ StockHub is an Inventory Management REST API built with Django and Django REST F
 
 Base URL (Development):
 
-```
+
 http://127.0.0.1:8000/
-```
+
 
 All API responses are in JSON format.
 
----
 
 ## Authentication
 
@@ -196,11 +195,9 @@ StockHub uses **Django REST Framework Token Authentication**.
 
 ### Authorization Header Format
 
-```
-Authorization: Token <your_token_here>
-```
 
----
+Authorization: Token <your_token_here>
+
 
 ## User Roles
 
@@ -211,7 +208,6 @@ Users can have one of the following roles:
 
 Role-based permissions can be extended as the application grows.
 
----
 
 ## API Endpoints
 
@@ -219,9 +215,7 @@ Role-based permissions can be extended as the application grows.
 
 **Endpoint:**
 
-```
 POST /api/accounts/register/
-```
 
 **Description:**
 Registers a new user and returns an authentication token.
@@ -236,103 +230,92 @@ Registers a new user and returns an authentication token.
   "year": 2025,
   "role": "staff"
 }
-```
 
 **Success Response (201 Created):**
 
-```json
+json
 {
   "message": "User registered successfully",
   "token": "abc123xyz..."
 }
-```
+
 
 **Error Response (400 Bad Request):**
 
-```json
+json
 {
   "username": ["This field is required."]
 }
-```
 
----
 
 ### 2. User Login
 
 **Endpoint:**
 
-```
 POST /api/accounts/login/
-```
 
 **Description:**
 Authenticates a user and returns an authentication token.
 
 **Request Body:**
 
-```json
+json
 {
   "username": "john_doe",
   "password": "StrongPassword123"
 }
-```
+
 
 **Success Response (200 OK):**
 
-```json
+json
 {
   "message": "Login successful",
   "token": "abc123xyz..."
 }
-```
 
 **Error Response (400 Bad Request):**
 
-```json
+json
 {
   "non_field_errors": ["Invalid username or password"]
 }
-```
-
----
 
 ### 3. User Profile (Protected)
 
 **Endpoint:**
 
-```
 GET /api/accounts/profile/
-```
+
 
 **Description:**
 Retrieves the profile of the currently authenticated user.
 
 **Headers Required:**
 
-```
+
 Authorization: Token <your_token_here>
-```
+
 
 **Success Response (200 OK):**
 
-```json
+json
 {
   "username": "john_doe",
   "company": "StockHub Ltd",
   "year": 2025,
   "role": "staff"
 }
-```
+
 
 **Error Response (401 Unauthorized):**
 
-```json
+json
 {
   "detail": "Authentication credentials were not provided."
 }
-```
 
----
+
 
 ## Authentication Flow Summary
 
@@ -341,7 +324,6 @@ Authorization: Token <your_token_here>
 3. Token is included in headers for protected requests.
 4. Protected endpoints validate token before granting access.
 
----
 
 ## HTTP Status Codes Used
 
@@ -353,7 +335,6 @@ Authorization: Token <your_token_here>
 | 401         | Unauthorized – Missing or invalid token |
 | 403         | Forbidden – Insufficient permissions    |
 
----
 
 ## Security Notes
 
@@ -361,7 +342,6 @@ Authorization: Token <your_token_here>
 * Tokens should be kept secret and transmitted only over HTTPS in production.
 * Token authentication is suitable for mobile apps and frontend frameworks.
 
----
 
 ## Future Enhancements
 
@@ -371,8 +351,234 @@ Authorization: Token <your_token_here>
 * API versioning
 * Swagger/OpenAPI documentation
 
----
 
 ## Conclusion
 
 This documentation provides a clear guide for integrating and testing StockHub’s authentication and user management APIs. It serves as a foundation for extending the system with inventory and transactional features.
+
+
+
+# StockHub – Inventory Management API
+
+## Overview
+
+StockHub is a Django REST Framework–based Inventory Management API designed to help organizations manage stock records efficiently. This project demonstrates core Django concepts including models, migrations, authentication, and CRUD operations using Django ORM and RESTful APIs.
+
+This README focuses on the **Stock module**, which represents inventory records consisting of header and body fields.
+
+
+## Features
+
+* Token-based authentication (Django REST Framework)
+* Role-based users (Admin & Staff)
+* Stock inventory management
+* Full CRUD operations via API and Django shell
+* Clean, modular Django app structure
+
+
+## Technology Stack
+
+* Python 3
+* Django
+* Django REST Framework
+* SQLite (development database)
+
+
+## Authentication
+
+This API uses **DRF Token Authentication**.
+
+### How Authentication Works
+
+1. User registers or logs in
+2. A token is generated
+3. Token must be included in request headers:
+
+Authorization: Token <your_token_here>
+
+## Stock Model
+
+### Header Fields
+
+* `date`
+* `remark`
+* `currency`
+* `project`
+
+### Body Fields
+
+* `item_code`
+* `item_description`
+* `warehouse`
+* `quantity_issued`
+* `stock_balance`
+* `price`
+* `remarks`
+
+
+## API Endpoints
+
+| Method | Endpoint          | Description                |
+| ------ | ----------------- | -------------------------- |
+| POST   | /api/stocks/      | Create a new stock record  |
+| GET    | /api/stocks/      | Retrieve all stock records |
+| GET    | /api/stocks/{id}/ | Retrieve a single stock    |
+| PUT    | /api/stocks/{id}/ | Update a stock record      |
+| DELETE | /api/stocks/{id}/ | Delete a stock record      |
+
+> 🔐 All endpoints require authentication.
+
+
+## CRUD Operations via Django Shell
+
+CRUD operations are demonstrated and documented using the Django shell.
+
+### Documentation Files
+
+* `create.md` – Stock creation
+* `retrieve.md` – Stock retrieval
+* `update.md` – Stock update
+* `delete.md` – Stock deletion
+* `CRUD_operations.md` – Combined documentation
+
+Each file contains:
+
+* Django shell command used
+* Expected output as comments
+
+
+## Project Structure
+
+StockHub/
+├── inventory/
+│   ├── models.py
+│   ├── migrations/
+│   └── apps.py
+├── StockHub/
+│   ├── settings.py
+│   ├── urls.py
+│   └── wsgi.py
+├── manage.py
+└── README.md
+
+## Future Enhancements
+
+* Purchase module
+* Sales module
+* Inventory reports
+* Swagger / OpenAPI documentation
+* PostgreSQL database
+
+
+## Conclusion
+
+This project demonstrates a solid understanding of Django fundamentals, RESTful API design, authentication, and database operations using Django ORM. It is suitable for academic submission and real-world extension.
+
+
+
+
+# StockHub – Inventory Management API
+
+
+## Purchase & Sales API Documentation
+
+### Overview
+
+The Purchase and Sales modules manage incoming and outgoing stock transactions within the StockHub Inventory Management System. These modules are designed following RESTful principles and support full CRUD operations.
+
+All endpoints are protected using token-based authentication.
+
+
+## Authentication
+
+**Method:** Token Authentication (Django REST Framework)
+
+**Header Format:**
+
+```
+Authorization: Token <your_token>
+```
+
+
+## Purchase API
+
+### Purchase Model Fields
+
+**Header Fields**
+
+* date
+* client_name
+* client_code
+* client_address
+* project_name
+* warehouse
+
+**Body Fields**
+
+* item_id
+* item_code
+* item_description
+* quantity_purchased
+* remarks
+
+### Purchase Endpoints
+
+| Method | Endpoint             | Description                  |
+| ------ | -------------------- | ---------------------------- |
+| POST   | /api/purchases/      | Create a new purchase record |
+| GET    | /api/purchases/      | Retrieve all purchases       |
+| GET    | /api/purchases/{id}/ | Retrieve a single purchase   |
+| PUT    | /api/purchases/{id}/ | Update a purchase record     |
+| DELETE | /api/purchases/{id}/ | Delete a purchase record     |
+
+
+## Sales API
+
+### Sales Model Fields
+
+**Header Fields**
+
+* date
+* client_name
+* client_code
+* client_address
+* project_name
+* warehouse
+
+**Body Fields**
+
+* item_id
+* item_code
+* item_description
+* quantity_sold
+* remarks
+
+### Sales Endpoints
+
+| Method | Endpoint         | Description                    |
+| ------ | ---------------- | ------------------------------ |
+| POST   | /api/sales/      | Create a new sales record      |
+| GET    | /api/sales/      | Retrieve all sales             |
+| GET    | /api/sales/{id}/ | Retrieve a single sales record |
+| PUT    | /api/sales/{id}/ | Update a sales record          |
+| DELETE | /api/sales/{id}/ | Delete a sales record          |
+
+
+## Status Codes
+
+* 200 OK – Successful request
+* 201 Created – Resource created successfully
+* 400 Bad Request – Validation error
+* 401 Unauthorized – Authentication required
+* 404 Not Found – Resource not found
+
+## Security Notes
+
+* All write operations require authentication
+* Input validation is enforced via serializers
+* Sensitive operations are restricted to authorized users
+
+
+## Conclusion
+
+The Purchase and Sales APIs provide a structured and secure way to manage inventory transactions. They integrate seamlessly with the Stock module and are designed for future scalability, reporting, and analytics.
