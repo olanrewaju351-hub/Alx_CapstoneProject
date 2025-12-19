@@ -23,6 +23,7 @@ Notes:
 """
 
 import os
+import dj_database_url
 from pathlib import Path
 
 # BASE_DIR: project's root (StockHub/)
@@ -36,7 +37,16 @@ SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', 'django-insecure-REPLACE_ME_FOR
 DEBUG = False
 
 # Local hosts for dev. Replace or restrict in production.
-ALLOWED_HOSTS = ['127.0.0.1', 'localhost', '[::1]']
+ALLOWED_HOSTS = ['StockHub.herokuapp.com', 'localhost', '127.0.0.1']
+
+SECURE_BROWSER_XSS_FILTER = True
+X_FRAME_OPTIONS = 'DENY'
+SECURE_CONTENT_TYPE_NOSNIFF = True
+SECURE_SSL_REDIRECT = True
+
+
+CSRF_COOKIE_SECURE = True
+SESSION_COOKIE_SECURE = True
 
 # Application definition
 INSTALLED_APPS = [
@@ -107,13 +117,17 @@ TEMPLATES = [
 WSGI_APPLICATION = 'StockHub.wsgi.application'
 
 # Database: default sqlite for local development
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
-}
+BASE_DIR = Path(__file__).resolve().parent.parent
 
+SECRET_KEY = os.environ.get('SECRET_KEY', 'unsafe-dev-secret-key')
+
+DATABASES = {
+    'default': dj_database_url.config(
+        default=f"sqlite:///{BASE_DIR / 'db.sqlite3'}",
+        conn_max_age=600,
+        ssl_require=False,
+    )
+}
 # Password validators (keep for production)
 AUTH_PASSWORD_VALIDATORS = [
     {'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',},

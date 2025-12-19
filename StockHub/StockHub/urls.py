@@ -19,12 +19,17 @@ from django.contrib import admin
 from django.urls import path, include
 from rest_framework.authtoken.views import obtain_auth_token
 from django.contrib.auth.views import LogoutView
+from .views import home
 
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('', home, name='home'),
     path('api/', include('accounts.urls')),     # users endpoints (from earlier)
     path('', include('accounts.urls')),
+    path('api/inventory/', include('inventory.urls')),
+    path('api/purchases/', include('purchase.urls')),
+    path('api/sales/', include('sales.urls')),
     path('api/auth/login/', obtain_auth_token, name='api_token_auth'),  # POST username+password -> token
     path('logout/', LogoutView.as_view(), name='logout'),
     # include inventory urls later
