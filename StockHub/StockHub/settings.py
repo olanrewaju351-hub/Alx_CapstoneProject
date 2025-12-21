@@ -37,7 +37,11 @@ SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', 'django-insecure-REPLACE_ME_FOR
 DEBUG = False
 
 # Local hosts for dev. Replace or restrict in production.
-ALLOWED_HOSTS = ['StockHub.herokuapp.com', 'localhost', '127.0.0.1']
+ALLOWED_HOSTS = [
+'stockhub.onrender.com',
+'localhost',
+'127.0.0.1'
+]
 
 SECURE_BROWSER_XSS_FILTER = True
 X_FRAME_OPTIONS = 'DENY'
@@ -122,12 +126,18 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.environ.get('SECRET_KEY', 'unsafe-dev-secret-key')
 
 DATABASES = {
-    'default': dj_database_url.config(
-        default=f"sqlite:///{BASE_DIR / 'db.sqlite3'}",
-        conn_max_age=600,
-        ssl_require=False,
-    )
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
+    }
 }
+
+if os.environ.get('DATABASE_URL'):
+    DATABASES['default'] = dj_database_url.config(
+        conn_max_age=600,
+        ssl_require=True,
+    )
+
 # Password validators (keep for production)
 AUTH_PASSWORD_VALIDATORS = [
     {'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',},
