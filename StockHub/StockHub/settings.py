@@ -38,10 +38,10 @@ DEBUG = False
 
 # Local hosts for dev. Replace or restrict in production.
 ALLOWED_HOSTS = [
-'stockhub.onrender.com',
-'localhost',
-'127.0.0.1'
+    'stockhub.onrender.com',
+    '.onrender.com'
 ]
+
 
 SECURE_BROWSER_XSS_FILTER = True
 X_FRAME_OPTIONS = 'DENY'
@@ -91,6 +91,7 @@ MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     # Helpful during development for serving static files with whitenoise if added
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -118,25 +119,23 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'StockHub.wsgi.application'
-
-# Database: default sqlite for local development
+# Build paths inside the project
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+# SECURITY WARNING:
+# Use environment variable in production (Render)
 SECRET_KEY = os.environ.get('SECRET_KEY', 'unsafe-dev-secret-key')
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
-}
+# WSGI application
+WSGI_APPLICATION = 'StockHub.wsgi.application'
 
-if os.environ.get('DATABASE_URL'):
-    DATABASES['default'] = dj_database_url.config(
+DATABASES = {
+    'default': dj_database_url.config(
+        default=f"sqlite:///{BASE_DIR / 'db.sqlite3'}",
         conn_max_age=600,
-        ssl_require=True,
+        ssl_require=False,
     )
+}
 
 # Password validators (keep for production)
 AUTH_PASSWORD_VALIDATORS = [
