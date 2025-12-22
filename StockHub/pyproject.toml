@@ -1,0 +1,25 @@
+[tool.poetry]
+name = "stockhub"
+version = "0.1.0"
+description = "StockHub Inventory Management Django REST API"
+authors = ["Alimi Kazeem Olanrewaju <olanrewaju351@gmail.com>"]
+readme = "README.md"
+packages = [{ include = "StockHub" }]
+
+[tool.poetry.dependencies]
+python = "^3.10"
+Django = "^4.2"
+djangorestframework = "^3.15"
+gunicorn = "^21.2"
+whitenoise = "^6.6"
+dj-database-url = "^2.1"
+psycopg2-binary = "^2.9"
+python-dotenv = "^1.2.1"
+
+[tool.poetry.group.dev.dependencies]
+black = "^24.3"
+isort = "^5.13"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
