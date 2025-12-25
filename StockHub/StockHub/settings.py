@@ -1,6 +1,5 @@
 """
 Django settings for StockHub project.
-
 Production-ready configuration for deployment on Render.
 """
 
@@ -11,7 +10,6 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-
 # --------------------------------------------------
 # BASE DIRECTORY
 # --------------------------------------------------
@@ -20,11 +18,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # --------------------------------------------------
 # SECURITY
 # --------------------------------------------------
-# SECRET_KEY must be set in Render Environment Variables
-SECRET_KEY = os.environ.get("SECRET_KEY")
+SECRET_KEY = os.environ.get("SECRET_KEY", "unsafe-dev-key")
 
-# Never run production with DEBUG=True
-DEBUG = False
+DEBUG = os.environ.get("DEBUG", "False") == "True"
 
 ALLOWED_HOSTS = [
     "stockhub.onrender.com",
@@ -44,7 +40,6 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
 
-
     # Third-party
     "rest_framework",
     "rest_framework.authtoken",
@@ -56,8 +51,8 @@ INSTALLED_APPS = [
     "sales",
 ]
 
-
-if os.environ.get("DEBUG") == "True":
+# Dev-only tools
+if DEBUG:
     INSTALLED_APPS.append("django_extensions")
 
 AUTH_USER_MODEL = "accounts.User"
@@ -153,9 +148,6 @@ STATICFILES_STORAGE = (
     "whitenoise.storage.CompressedManifestStaticFilesStorage"
 )
 
-# Do NOT set STATICFILES_DIRS in production
-STATICFILES_DIRS = []
-
 # --------------------------------------------------
 # MEDIA FILES
 # --------------------------------------------------
@@ -163,12 +155,12 @@ MEDIA_URL = "/media/"
 MEDIA_ROOT = BASE_DIR / "media"
 
 # --------------------------------------------------
-# SECURITY SETTINGS (Render-safe)
+# SECURITY SETTINGS
 # --------------------------------------------------
-SECURE_SSL_REDIRECT = False
+SECURE_SSL_REDIRECT = not DEBUG
 
-CSRF_COOKIE_SECURE = True
-SESSION_COOKIE_SECURE = True
+CSRF_COOKIE_SECURE = not DEBUG
+SESSION_COOKIE_SECURE = not DEBUG
 
 SECURE_BROWSER_XSS_FILTER = True
 SECURE_CONTENT_TYPE_NOSNIFF = True
