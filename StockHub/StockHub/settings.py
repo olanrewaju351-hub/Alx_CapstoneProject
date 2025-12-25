@@ -7,6 +7,10 @@ Production-ready configuration for deployment on Render.
 import os
 from pathlib import Path
 import dj_database_url
+from dotenv import load_dotenv
+
+load_dotenv()
+
 
 # --------------------------------------------------
 # BASE DIRECTORY
@@ -39,6 +43,8 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    "django_extensions",
+
 
     # Third-party
     "rest_framework",

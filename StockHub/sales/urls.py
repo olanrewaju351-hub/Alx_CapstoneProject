@@ -1,9 +1,18 @@
-from django.urls import path
-from .views import SalesListCreateView, index
-from . import views
+from django.urls import path, include
+from rest_framework.routers import DefaultRouter
+from .views import SalesViewSet, SalesListCreateView, index
+
+# Create a router and register the ViewSet
+router = DefaultRouter()
+router.register(r"sales", SalesViewSet, basename="sales")  # this enables /api/sales/sales/
 
 urlpatterns = [
-    path('', SalesListCreateView.as_view(), name='sales-list-create'),
-    path('', views.index, name='sales-home'),
-    path('test/', index, name='sales-index'),  # simple browser test
+    # Class-based test API
+    path("", SalesListCreateView.as_view(), name="sales-list-create"),
+
+    # Simple test page
+    path("test/", index, name="sales-test"),
+
+    # Include the router URLs (CRUD)
+    path("", include(router.urls)),
 ]
