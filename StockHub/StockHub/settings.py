@@ -103,8 +103,6 @@ TEMPLATES = [
 # --------------------------------------------------
 # DATABASE
 DATABASE_URL = os.environ.get("DATABASE_URL")
-if DATABASE_URL == "":
-    DATABASE_URL = None
 # --------------------------------------------------
 DATABASES = {
     "default": dj_database_url.parse(
