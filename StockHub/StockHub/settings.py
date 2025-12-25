@@ -23,11 +23,13 @@ SECRET_KEY = os.environ.get("SECRET_KEY", "unsafe-dev-key")
 DEBUG = os.environ.get("DEBUG", "False") == "True"
 
 ALLOWED_HOSTS = [
-    "stockhub.onrender.com",
+    "stockhub-3.onrender.com",
     ".onrender.com",
     "localhost",
     "127.0.0.1",
 ]
+
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
 # --------------------------------------------------
 # APPLICATION DEFINITION
