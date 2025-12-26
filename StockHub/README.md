@@ -356,6 +356,21 @@ json
 
 This documentation provides a clear guide for integrating and testing StockHub’s authentication and user management APIs. It serves as a foundation for extending the system with inventory and transactional features.
 
+| Method | Endpoint              | Purpose                                    |
+| ------ | --------------------- | ------------------------------------------ |
+| POST   | `/api/auth/login/`    | Login user and return authentication token |
+| POST   | `/api/token/`         | Obtain JWT access & refresh tokens         |
+| POST   | `/api/token/refresh/` | Refresh JWT access token                   |
+| GET    | `/logout/`            | Logout the currently logged-in user        |
+
+| GET    | `/api/accounts/`          | List all users (admin use)      |
+| POST   | `/api/accounts/register/` | Register a new user             |
+| GET    | `/api/accounts/profile/`  | Retrieve logged-in user profile |
+| PUT    | `/api/accounts/profile/`  | Update user profile             |
+| PATCH  | `/api/accounts/profile/`  | Partially update user profile   |
+
+
+
 
 
 # StockHub – Inventory Management API
@@ -418,13 +433,19 @@ Authorization: Token <your_token_here>
 
 ## API Endpoints
 
-| Method | Endpoint          | Description                |
-| ------ | ----------------- | -------------------------- |
-| POST   | /api/stocks/      | Create a new stock record  |
-| GET    | /api/stocks/      | Retrieve all stock records |
-| GET    | /api/stocks/{id}/ | Retrieve a single stock    |
-| PUT    | /api/stocks/{id}/ | Update a stock record      |
-| DELETE | /api/stocks/{id}/ | Delete a stock record      |
+| Method | Endpoint                     | Purpose                            |
+| ------ | ---------------------------- | ---------------------------------- |
+| GET    | `/api/inventory/stocks/`      | Retrieve all inventory items       |
+| POST   | `/api/inventory/stocks/`      | Create a new inventory record      |
+| GET    | `/api/inventory/stocks/{id}/` | Retrieve a single inventory item   |
+| PUT    | `/api/inventory/stocks/{id}/` | Update an inventory item           |
+| PATCH  | `/api/inventory/stocks/{id}/` | Partially update an inventory item |
+| DELETE | `/api/inventory/stocks/{id}/` | Delete an inventory item           |
+
+| GET    | `/api/inventory/stock/?item_code=` | Search inventory by item code |
+| GET    | `/api/inventory/stock/?warehouse=` | Filter inventory by warehouse |
+| GET    | `/api/inventory/stock/?project=`   | Filter inventory by project   |
+
 
 > 🔐 All endpoints require authentication.
 
@@ -522,14 +543,15 @@ Authorization: Token <your_token>
 * remarks
 
 ### Purchase Endpoints
+| Method | Endpoint                        | Purpose                       |
+| ------ | ------------------------------- | ----------------------------- |
+| GET    | `/api/purchases/purchase/`      | Retrieve all purchase records |
+| POST   | `/api/purchases/purchase/`      | Create a new purchase record  |
+| GET    | `/api/purchases/purchase/{id}/` | Retrieve a single purchase    |
+| PUT    | `/api/purchases/purchase/{id}/` | Update a purchase record      |
+| PATCH  | `/api/purchases/purchase/{id}/` | Partially update a purchase   |
+| DELETE | `/api/purchases/purchase/{id}/` | Delete a purchase record      |
 
-| Method | Endpoint             | Description                  |
-| ------ | -------------------- | ---------------------------- |
-| POST   | /api/purchases/      | Create a new purchase record |
-| GET    | /api/purchases/      | Retrieve all purchases       |
-| GET    | /api/purchases/{id}/ | Retrieve a single purchase   |
-| PUT    | /api/purchases/{id}/ | Update a purchase record     |
-| DELETE | /api/purchases/{id}/ | Delete a purchase record     |
 
 
 ## Sales API
@@ -555,13 +577,14 @@ Authorization: Token <your_token>
 
 ### Sales Endpoints
 
-| Method | Endpoint         | Description                    |
-| ------ | ---------------- | ------------------------------ |
-| POST   | /api/sales/      | Create a new sales record      |
-| GET    | /api/sales/      | Retrieve all sales             |
-| GET    | /api/sales/{id}/ | Retrieve a single sales record |
-| PUT    | /api/sales/{id}/ | Update a sales record          |
-| DELETE | /api/sales/{id}/ | Delete a sales record          |
+| Method | Endpoint                 | Purpose                         |
+| ------ | ------------------------ | ------------------------------- |
+| GET    | `/api/sales/sales/`      | Retrieve all sales records      |
+| POST   | `/api/sales/sales/`      | Create a new sales record       |
+| GET    | `/api/sales/sales/{id}/` | Retrieve a single sale          |
+| PUT    | `/api/sales/sales/{id}/` | Update a sales record           |
+| PATCH  | `/api/sales/sales/{id}/` | Partially update a sales record |
+| DELETE | `/api/sales/sales/{id}/` | Delete a sales record           |
 
 
 ## Status Codes
